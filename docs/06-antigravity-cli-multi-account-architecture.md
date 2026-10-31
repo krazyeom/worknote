@@ -160,9 +160,13 @@ alias agy-personal='GEMINI_API_KEY="<personal-key>" GOOGLE_GEMINI_BASE_URL="http
 
 ---
 
-## 6. 향후 확장 고려 사항 (Feature Backlog)
+## 6. 구현 및 배포 내역 (Implementation Status)
 
-1. **`magpie agy` CLI 계정 플래그 지원**:
-   - `magpie agy run --account <email>` 인자를 파싱하여 지정 계정 전용 임시 키를 자동 주입하는 편의 기능.
-2. **Magpie Web UI의 Antigravity CLI 설정 개선**:
-   - Aside 에이전트(`internal/agent/aside.go`)의 `account` 필드처럼, Web UI 상에서 `agy`가 기본 사용할 계정을 드롭다운으로 선택할 수 있도록 필드 확장.
+1. **Magpie 앱 GUI 계정 스위칭 및 설정 서랍 연동 완료**:
+   - `internal/gui/assets/app.js`: 미연결 상태의 `agy` 행에 계정 스위처 버튼(`.ag-acc.ag-who`) 배치 및 팝업 메뉴를 통한 원클릭 계정 전환 제공.
+   - `internal/agent/agy.go`: `account` 필드를 등록하여 에이전트 상세 서랍에서 계정 풀 목록을 드롭다운으로 선택 가능하도록 구현.
+2. **macOS 시스템 키체인(`Keychain`) 원자적 갱신 연동**:
+   - `internal/provider/google.go`: `SwitchLogin("antigravity", user)` 호출 시 Magpie `logins.json`뿐만 아니라 macOS Keychain(`service: gemini, account: antigravity`)의 OAuth 토큰(`go-keyring-base64:<json>`)을 동기화하도록 구현.
+   - Magpie 게이트웨이 경유 실행과 `agy` 단독 실행 양쪽 모두에서 계정이 즉시 반영됨.
+3. **바이너리 빌드 및 macOS 앱 번들 배포**:
+   - `make build` 및 `make app` 빌드 검증 통과, `/Applications/magpie.app` 설치 및 실행 프로세스 갱신 완료.

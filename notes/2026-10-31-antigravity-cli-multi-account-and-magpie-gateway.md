@@ -90,6 +90,21 @@ Antigravity CLI 기동 시 특정 계정만 배타적으로 사용해야 하는 
 
 ---
 
+### G. Magpie 앱(GUI/CLI) 네이티브 Antigravity 계정 스위칭 및 시스템 키체인 동기화 구현
+* **Magpie 앱 GUI 계정 스위처 연동 (`internal/gui/assets/app.js`)**:
+  * `switchesAccounts` 함수에 `agy`를 등록하여, 미연결 단독 모드에서도 Claude Code나 Codex처럼 에이전트 목록 행에 계정 스위처 버튼(`.ag-acc.ag-who`)이 노출되도록 개선했습니다.
+  * 팝업 메뉴에서 원하는 Antigravity 계정을 선택하면 `POST /api/login/switch`를 호출하여 실시간 계정 전환이 수행됩니다.
+* **에이전트 설정 서랍(Drawer) 내 `account` Field 신설 (`internal/agent/agy.go`)**:
+  * Antigravity CLI 설정 서랍에 `account` 필드를 추가하여, 현재 활성화된 주 계정을 표시하고 등록된 계정 풀 목록을 드롭다운으로 선택하여 전환할 수 있도록 구현했습니다.
+* **macOS 시스템 키체인 원자적 동기화 (`internal/provider/google.go`)**:
+  * `switchGoogleLogin` 수행 시 Magpie의 `logins.json` 내 1순위 계정(`First: true`) 갱신뿐만 아니라, macOS 시스템 키체인(`service: gemini, account: antigravity`)의 OAuth 자격 증명(`go-keyring-base64:<json>`)을 직접 갱신하도록 구현했습니다.
+  * 이를 통해 Magpie 게이트웨이를 경유하는 호출은 물론, 터미널에서 `agy`를 단독 실행하는 경우에도 선택한 계정으로 즉시 전환되어 동작합니다.
+* **바이너리 빌드 및 배포**:
+  * `make build` 및 `make app`을 통해 macOS `magpie.app` 번들을 성공적으로 패키징하고 `/Applications/magpie.app`에 반영했습니다.
+  * 단위 테스트(`internal/agent`, `internal/provider`) 검증 및 실시간 계정 스위칭 통신 검증을 완료했습니다.
+
+---
+
 ## 3. 기술 결정 사항 (ADR 요약)
 
 | 결정 주제 | 채택한 방안 | 기각된 대안 및 사유 |
