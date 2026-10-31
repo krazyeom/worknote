@@ -105,12 +105,48 @@ Antigravity CLI 기동 시 특정 계정만 배타적으로 사용해야 하는 
 
 ---
 
+### H. 커스텀 빌드 식별 메타데이터 및 독립 버전 관리 체계 구축
+* **커스텀 빌드 식별 필요성**:
+  * 오리지널 업스트림 릴리즈와 커스텀 기능(Antigravity 다중 계정 및 키체인 동기화)이 포함된 버전을 명확히 식별할 수 있도록 About 설정, 앱 번들 및 CLI 버전을 독립 관리 체계로 재편했습니다.
+* **설정(Settings › About) 커스텀 정보 노출 (`internal/gui/assets/app.js`, `i18n.js`)**:
+  * `Custom build` 전용 행을 신설하여 유지보수자 `krazyeom`과 포크 저장소 `krazyeom/magpie`를 표시하고 직결 GitHub 링크 버튼을 연동했습니다.
+  * 상단 Version 행의 세부 상태에 `Custom build by krazyeom` 안내 문구를 표시하도록 구현했습니다.
+  * 글로벌 다국어 번역 테이블(`i18n.js`)에 커스텀 빌드 관련 문구를 등록했습니다.
+* **macOS 앱 번들 메타데이터 (`build/darwin/Info.plist`)**:
+  * `NSHumanReadableCopyright`를 `krazyeom (forked from yetone)`으로 갱신하여 시스템 정보 창에서도 명확히 식별되도록 조치했습니다.
+* **독립 버전 태깅 및 빌드 자동화 (`Makefile`)**:
+  * `Makefile` 내 `VERSION` 정의를 개선하여 `*-krazyeom*` 태그를 우선 감지하고 없을 경우 `-krazyeom` 접미사를 자동 부여하도록 설정했습니다.
+  * 커스텀 릴리즈 태그 `v0.1.2374-krazyeom.1`을 생성하여 빌드 산출물과 CLI(`magpie version`)에 `magpie v0.1.2374-krazyeom.1`이 정확히 각인되도록 했습니다.
+* **업스트림 자동 업데이트 덮어쓰기 방지 (`internal/update/update.go`)**:
+  * `Released(v)` 함수에서 버전명에 `krazyeom`이 포함된 경우 릴리즈 자동 업데이트 대상에서 제외(`return false`)하여, 업스트림 바이너리가 커스텀 패치를 임의로 덮어쓰지 않도록 안전장치를 마련했습니다.
+
+---
+
+### I. Magpie App GUI 상의 Antigravity (`agy`) 계정 전환 가이드
+Magpie App GUI에서 Antigravity 계정 전환은 다음 세 가지 경로로 제공됩니다:
+
+1. **Agents 탭 (에이전트 목록 빠른 스위처)**:
+   * **위치**: 상단 `Agents` 탭 › `Antigravity CLI` 행
+   * **조작**: 에이전트 이름 우측의 계정 버튼(`.ag-acc.ag-who`, 예: `● <계정명>`)을 클릭하면 팝업 드롭다운이 열립니다.
+   * **동작**: 목록에서 원하는 계정을 클릭하면 즉시 주 계정이 전환되고 시스템 키체인과 동기화됩니다.
+2. **Agents 상세 설정 서랍 (Configuration Drawer)**:
+   * **위치**: `Antigravity CLI` 행을 클릭하여 열리는 세부 설정 서랍
+   * **조작**: `Account` 설정 항목의 드롭다운을 열어 등록된 다중 계정 중 하나를 선택합니다.
+   * **동작**: 선택 즉시 저장 및 실시간 적용됩니다.
+3. **Providers 탭 (계정 풀 및 쿼터 관리)**:
+   * **위치**: 상단 `Providers` 탭 › `Antigravity` 카드
+   * **조작**: 등록된 모든 Google Antigravity 계정의 실시간 사용량과 쿼터 리셋 시각을 확인하고, 원하는 계정의 `Make first` 버튼을 클릭합니다.
+   * **동작**: 1순위 계정으로 승격되며, 요청 시 우선 소비 및 자동 Failover 순서가 재조정됩니다.
+
+---
+
 ## 3. 기술 결정 사항 (ADR 요약)
 
 | 결정 주제 | 채택한 방안 | 기각된 대안 및 사유 |
 | :--- | :--- | :--- |
 | **다중 계정 관리 주체** | **Magpie AI Gateway 프록시 라우팅 위임** | Antigravity CLI 자체 소스코드 패치: 공식 바이너리 자동 업데이트 시 수정 내역이 덮어쓰여 유지보수 불가 |
 | **계정 분기 제어 방식** | **Gateway Key 계정 바인딩 (`gateway-key accounts`)** | 홈 디렉토리 분리(`HOME=~/.agy2 agy`): 키체인 접근 권한 및 도구 전역 설정 공유가 깨져 사용성 저하 |
+| **커스텀 버전 관리** | **`-krazyeom` 독립 태그 및 업스트림 덮어쓰기 방어** | 업스트림 시맨틱 버전 직접 상속: 업스트림의 자동 업데이트 프로세스가 비공식 빌드를 덮어쓰는 위험 발생 |
 | **Git 원격 구조** | **`origin`(개인 포크) / `upstream`(오리지널) 분리** | 단일 `origin` 강제 푸시: 오리지널 업데이트 추적 및 풀 리퀘스트 관리가 번거로워짐 |
 | **전역 룰 배치 경로** | **`~/.gemini/GEMINI.md` 표준 마운트** | 프로젝트별 개별 복사: 새로운 디렉터리마다 룰 파일 생성을 반복해야 하는 비효율 발생 |
 
