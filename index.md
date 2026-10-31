@@ -28,6 +28,7 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
   * 대사별 순차 큐 자동 전진 및 2단계 프리페치를 통한 음성-자막 100% 실시간 싱크 보장
   * aWord 계승 Zero-Layout-Shift 단어 하이라이터 구축으로 글자 흔들림 박멸
   * 328.5초 선두/후미 무음 제거 및 60fps rAF 초정밀 싱크 엔진 적용
+  * 비발화 기호(`...`, `--`) 하이라이트 배제 및 가중치 기반 발화 단어 매핑으로 싱크 오차 원천 차단
 * [2026-10-31: Antigravity CLI 다중 계정 분기 아키텍처 및 Magpie 게이트웨이 연동](notes/2026-10-31-antigravity-cli-multi-account-and-magpie-gateway.md)
   * Antigravity CLI 단일 키체인 저장 한계 및 외부 엔드포인트 우회 분석
   * Magpie 게이트웨이 기반 다중 계정 풀링, 자동 페일오버 및 계정 전환 메커니즘
