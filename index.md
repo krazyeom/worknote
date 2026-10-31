@@ -13,6 +13,11 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
 ## 📚 목차
 
 ### 1. 작업 일지 (Daily Logs)
+* [2026-10-31: Antigravity CLI 다중 계정 분기 아키텍처 및 Magpie 게이트웨이 연동](notes/2026-10-31-antigravity-cli-multi-account-and-magpie-gateway.md)
+  * Antigravity CLI 단일 키체인 저장 한계 및 외부 엔드포인트 우회 분석
+  * Magpie 게이트웨이 기반 다중 계정 풀링, 자동 페일오버 및 계정 전환 메커니즘
+  * Gateway Key 화이트리스트 바인딩을 통한 계정별 독립 실행 전략
+  * Magpie 저장소 개인 원격(`krazyeom/magpie`) 관리 체계 전환 및 전역 룰 배포
 * [2026-10-31: aWord 영한 대조 학습 엔진 및 블로그 다국어 시스템 구축](notes/2026-10-31-aword-tts-shadowing-and-blog-i18n.md)
   * Gemini Flash 기반 1:1 문장 정합 번역 파이프라인
   * 24kHz Studio AI 음성 합성 및 0ms 프리페치
@@ -43,6 +48,10 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
   * Claude, Codex, Antigravity, Gemini, Cursor 환경 원클릭 연동
   * 사내 프로젝트 서브모듈 및 심볼릭 링크 표준 세팅
   * Security Zero-Leak 자동 검증 워크플로
+* [문서 06: Antigravity CLI 다중 계정 분기 및 게이트웨이 통합 아키텍처](docs/06-antigravity-cli-multi-account-architecture.md)
+  * Antigravity CLI 단일 키체인 바인딩 제약과 커스텀 엔드포인트 우회 기법
+  * Magpie 게이트웨이의 계정 풀링, 자동 페일오버 및 라운드로빈 메커니즘
+  * Gateway Key 화이트리스트 바인딩을 활용한 계정 완전 격리 운용 전략
 
 ---
 
