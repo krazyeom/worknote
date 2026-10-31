@@ -25,6 +25,8 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
   * 관리자(ADMIN) 권한 기반 자막 수정 제어 및 HMAC 보안 세션 인증
   * 다크/라이트 테마 전환 시스템 및 Anti-FOUC 하이드레이션 구축
   * 모바일 뷰포트(360~390px) 상단 메뉴 겹침 해소 및 반응형 타이포그래피 최적화
+  * 대사별 순차 큐 자동 전진 및 2단계 프리페치를 통한 음성-자막 100% 실시간 싱크 보장
+  * aWord 계승 Zero-Layout-Shift 단어 하이라이터 구축으로 글자 흔들림 박멸
 * [2026-10-31: Antigravity CLI 다중 계정 분기 아키텍처 및 Magpie 게이트웨이 연동](notes/2026-10-31-antigravity-cli-multi-account-and-magpie-gateway.md)
   * Antigravity CLI 단일 키체인 저장 한계 및 외부 엔드포인트 우회 분석
   * Magpie 게이트웨이 기반 다중 계정 풀링, 자동 페일오버 및 계정 전환 메커니즘
