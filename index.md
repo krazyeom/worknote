@@ -34,6 +34,17 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
   * Next.js 14 App Router 서버 컴포넌트와 클라이언트 뷰 분리
   * `localStorage` 및 커스텀 이벤트를 활용한 에디터-블로그 언어 동기화
   * 메타데이터 바 배지 배치 및 가독성 최적화
+* [문서 05: 범용 AI 작업 일지 룰 및 스킬 임포트 가이드](docs/05-universal-ai-rule-import-guide.md)
+  * Claude, Codex, Antigravity, Gemini, Cursor 환경 원클릭 연동
+  * 사내 프로젝트 서브모듈 및 심볼릭 링크 표준 세팅
+  * Security Zero-Leak 자동 검증 워크플로
+
+---
+
+### 3. 공용 규칙 및 스킬 (Rules & Skills)
+* **[rules/AGENTS.md](rules/AGENTS.md)**: 모든 AI 에이전트(Claude, Codex, Antigravity, Cursor) 공용 표준 규칙
+* **[skills/daily-worknote/SKILL.md](skills/daily-worknote/SKILL.md)**: 하루 작업 내역을 자동 수집하고 표준 문서로 생성하는 에이전트 스킬
+* **[scripts/setup-worknote.sh](scripts/setup-worknote.sh)**: 새로운 프로젝트에서 1초 만에 AI 규칙을 적용하는 설치 스크립트
 
 ---
 
