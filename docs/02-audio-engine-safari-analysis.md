@@ -73,3 +73,12 @@ export function stopGlobalAudio() {
 ```
 
 * `pagehide`, `beforeunload`, 라우트 변경, 컴포넌트 정리 시점에 `stopGlobalAudio()`와 `clearPlaybackTimer()`를 강제 실행하여 백그라운드 누수를 차단했습니다.
+
+---
+
+### C. Web Speech 폴백 완전 소거 및 키 라운드로빈 쿨다운
+* **중간 음성 변조 문제 원인**:
+  네트워크 지연이나 일시적 Gemini API 429 Rate Limit 발생 시, 프론트엔드에 남아있던 예외 처리기가 브라우저 Web Speech로 자동 폴백되면서 캐시된 24kHz 음성 이후 기계식 합성음(`Samantha Compact`)으로 음색이 갑자기 바뀌는 문제가 있었습니다.
+* **해결책**:
+  1. 기계식 Web Speech 폴백 경로를 완전히 소거하고, 에러 시 잠시 대기 후 원본 음원 자동 재시도하도록 단일화했습니다.
+  2. `gemini-audio.ts`에 키 라운드로빈 및 429 쿨다운(45초) 회피를 탑재하여 특정 키 쿼터 소진 시 정상 키로 즉각 우회하도록 개선했습니다.
