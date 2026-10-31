@@ -57,7 +57,9 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
 * [문서 06: Antigravity CLI 다중 계정 분기 및 게이트웨이 통합 아키텍처](docs/06-antigravity-cli-multi-account-architecture.md)
   * Antigravity CLI 단일 키체인 바인딩 제약과 커스텀 엔드포인트 우회 기법
   * Magpie 게이트웨이의 계정 풀링, 자동 페일오버 및 라운드로빈 메커니즘
-  * Gateway Key 화이트리스트 바인딩을 활용한 계정 완전 격리 운용 전략
+  * GUI 조작 매뉴얼(Agents 탭 빠른 스위처, 설정 서랍, Providers 카드 Make first)
+  * macOS 키체인 양방향 동기화 및 CLI 래퍼(`agyp`)
+  * krazyeom 커스텀 빌드 식별 메타데이터, 독립 버전 태그 및 업스트림 덮어쓰기 방어
 * [문서 07: 영화 대본 TTS 오디오 파이프라인 및 침묵 탐지 슬라이싱 아키텍처](docs/07-subtitle-to-speech-audio-pipeline-and-slicing.md)
   * 16-bit 24kHz Linear PCM 디클릭 신호 처리 및 끝단 제로 패딩
   * 대용량 대본 청크 벌크 호출 및 국소 윈도우 RMS 침묵 탐지 분할 알고리즘

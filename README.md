@@ -31,7 +31,8 @@ curl -fsSL https://raw.githubusercontent.com/krazyeom/worknote/main/scripts/setu
 * **2026-10-31**: [Antigravity CLI 다중 계정 분기 아키텍처 및 Magpie 게이트웨이 연동](notes/2026-10-31-antigravity-cli-multi-account-and-magpie-gateway.md)
   * Antigravity CLI 단일 키체인 저장 한계 및 외부 엔드포인트 우회 분석
   * Magpie 게이트웨이 기반 다중 계정 풀링, 자동 페일오버 및 계정 전환 메커니즘
-  * Gateway Key 화이트리스트 바인딩을 통한 계정별 독립 실행 전략
+  * GUI 앱 3중 계정 스위처(Agents 탭, 설정 서랍, Providers 카드) 및 키체인 원자적 동기화
+  * krazyeom 커스텀 빌드 메타데이터(`Settings › About`) 및 독립 버전 태그(`v0.1.2374-krazyeom.1`)
   * Magpie 저장소 개인 원격(`krazyeom/magpie`) 관리 체계 전환 및 전역 룰 배포
 * **2026-10-31**: [aWord 영한 대조 학습 엔진 및 블로그 다국어 시스템 구축](notes/2026-10-31-aword-tts-shadowing-and-blog-i18n.md)
   * Gemini Flash 기반 1:1 문장 정합 번역 파이프라인

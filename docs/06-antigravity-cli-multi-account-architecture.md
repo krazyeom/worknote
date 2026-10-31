@@ -163,10 +163,66 @@ alias agy-personal='GEMINI_API_KEY="<personal-key>" GOOGLE_GEMINI_BASE_URL="http
 ## 6. 구현 및 배포 내역 (Implementation Status)
 
 1. **Magpie 앱 GUI 계정 스위칭 및 설정 서랍 연동 완료**:
-   - `internal/gui/assets/app.js`: 미연결 상태의 `agy` 행에 계정 스위처 버튼(`.ag-acc.ag-who`) 배치 및 팝업 메뉴를 통한 원클릭 계정 전환 제공.
-   - `internal/agent/agy.go`: `account` 필드를 등록하여 에이전트 상세 서랍에서 계정 풀 목록을 드롭다운으로 선택 가능하도록 구현.
+   * `internal/gui/assets/app.js`: 미연결 상태의 `agy` 행에 계정 스위처 버튼(`.ag-acc.ag-who`) 배치 및 팝업 메뉴를 통한 원클릭 계정 전환 제공.
+   * `internal/agent/agy.go`: `account` 필드를 등록하여 에이전트 상세 서랍에서 계정 풀 목록을 드롭다운으로 선택 가능하도록 구현.
 2. **macOS 시스템 키체인(`Keychain`) 원자적 갱신 연동**:
-   - `internal/provider/google.go`: `SwitchLogin("antigravity", user)` 호출 시 Magpie `logins.json`뿐만 아니라 macOS Keychain(`service: gemini, account: antigravity`)의 OAuth 토큰(`go-keyring-base64:<json>`)을 동기화하도록 구현.
-   - Magpie 게이트웨이 경유 실행과 `agy` 단독 실행 양쪽 모두에서 계정이 즉시 반영됨.
-3. **바이너리 빌드 및 macOS 앱 번들 배포**:
-   - `make build` 및 `make app` 빌드 검증 통과, `/Applications/magpie.app` 설치 및 실행 프로세스 갱신 완료.
+   * `internal/provider/google.go`: `SwitchLogin("antigravity", user)` 호출 시 Magpie `logins.json`뿐만 아니라 macOS Keychain(`service: gemini, account: antigravity`)의 OAuth 토큰(`go-keyring-base64:<json>`)을 동기화하도록 구현.
+   * Magpie 게이트웨이 경유 실행과 `agy` 단독 실행 양쪽 모두에서 계정이 즉시 반영됨.
+3. **독립 버전 태깅 및 커스텀 메타데이터 노출**:
+   * Settings › About 페이지에 `Custom build` 행 추가 (유지보수자 `krazyeom`, 저장소 `krazyeom/magpie` 직결 GitHub 링크).
+   * `v0.1.2374-krazyeom.1` 태그 생성 및 `internal/update/update.go` 업스트림 덮어쓰기 방지 적용.
+4. **바이너리 빌드 및 macOS 앱 번들 배포**:
+   * `make build` 및 `make app` 빌드 검증 통과, `/Applications/magpie.app` 설치 및 실행 프로세스 갱신 완료.
+
+---
+
+## 7. Magpie GUI 조작 매뉴얼 (User Manual for GUI)
+
+사용자는 Magpie GUI 앱에서 세 가지 직관적인 경로로 Antigravity 계정을 전환할 수 있습니다:
+
+```
+[Magpie App GUI 계정 전환 경로 3가지]
+┌────────────────────────────────────────────────────────────────────────┐
+│ 1. Agents 탭: Antigravity CLI 행 우측 [● account@gmail.com] 뱃지 클릭  │
+│    └─ 드롭다운 팝업에서 다른 계정 클릭 시 즉시 전환                    │
+├────────────────────────────────────────────────────────────────────────┤
+│ 2. Agents 상세 서랍: Antigravity CLI 행 클릭 후 [Account] 드롭다운     │
+│    └─ 등록된 계정 풀 목록 중 원하는 계정 선택                          │
+├────────────────────────────────────────────────────────────────────────┤
+│ 3. Providers 탭: [Antigravity] 카드에서 잔여 쿼터 확인 후              │
+│    └─ 원하는 계정의 [Make first] 버튼 클릭하여 1순위 승격              │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Agents 탭 (에이전트 목록 빠른 스위처)**:
+   * 상단 **Agents** 탭에서 `Antigravity CLI` 항목을 찾습니다.
+   * 이름 우측의 계정 뱃지(`.ag-acc.ag-who`, 예: `● user@gmail.com`)를 클릭하면 팝업 드롭다운이 열립니다.
+   * 원하는 계정을 클릭하면 즉시 주 계정이 전환되고 macOS 키체인이 동기화됩니다.
+2. **Agents 상세 설정 서랍**:
+   * `Antigravity CLI` 행을 클릭하여 열리는 서랍 내 **`Account`** 필드 드롭다운에서 계정을 선택합니다.
+3. **Providers 탭 (쿼터 모니터링 및 지정)**:
+   * 상단 **Providers** 탭의 `Antigravity` 카드에서 계정별 실시간 잔여 쿼터(`Gemini 7d`, `Claude & GPT` 등)를 확인하고, **`Make first`** 버튼을 눌러 1순위 계정으로 승격시킵니다.
+
+---
+
+## 8. 커스텀 빌드 메타데이터 및 버전 관리 사양서
+
+| 항목 | 구현 위치 | 동작 내용 |
+| :--- | :--- | :--- |
+| **Settings › About 노출** | `internal/gui/assets/app.js` | `Custom build` 행 신설, `krazyeom` 유지보수자 및 `github.com/krazyeom/magpie` GitHub 바로가기 연동 |
+| **버전 상태 문구** | `internal/gui/assets/app.js` | Version 행 세부 상태에 `Custom build by krazyeom` 표시 |
+| **다국어 지원** | `internal/gui/assets/i18n.js` | 한국어/영어/중국어/일본어/독어 로케일에 커스텀 빌드 레이블 등록 |
+| **macOS 번들 저작권** | `build/darwin/Info.plist` | `NSHumanReadableCopyright`에 `krazyeom (forked from yetone)` 명시 |
+| **빌드 버전 자동 부여** | `Makefile` | `VERSION` 생성 시 `*-krazyeom*` 태그 우선 감지 및 `-krazyeom` 자동 접미사 부여 |
+| **업스트림 덮어쓰기 방어** | `internal/update/update.go` | `Released(v)`에서 `krazyeom` 포함 시 `false` 반환하여 업스트림 자동 업데이트 차단 |
+
+---
+
+## 9. 소스코드 구조 및 참조 파일 맵
+
+* **[internal/agent/agy.go](file:///Users/krazyeom/dev/magpie/internal/agent/agy.go)**: Antigravity CLI 에이전트 정의 및 `Account` 설정 필드
+* **[internal/provider/google.go](file:///Users/krazyeom/dev/magpie/internal/provider/google.go)**: Google Antigravity 인증, 계정 감지 및 macOS 키체인 동기화(`syncAntigravityKeychain`)
+* **[internal/provider/logins.go](file:///Users/krazyeom/dev/magpie/internal/provider/logins.go)**: 계정 목록 조회, 1순위 계정 확인 및 전환 처리
+* **[internal/gui/assets/app.js](file:///Users/krazyeom/dev/magpie/internal/gui/assets/app.js)**: GUI 계정 스위처 렌더링 및 About 페이지 메타데이터
+* **[internal/update/update.go](file:///Users/krazyeom/dev/magpie/internal/update/update.go)**: 업데이트 릴리즈 판별 및 커스텀 빌드 보호
+* **[docs/antigravity-guide.md](file:///Users/krazyeom/dev/magpie/docs/antigravity-guide.md)**: Magpie 저장소 내 사용자 매뉴얼 및 시스템 기술문서
