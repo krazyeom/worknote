@@ -22,6 +22,12 @@ curl -fsSL https://raw.githubusercontent.com/krazyeom/worknote/main/scripts/setu
 ---
 
 ## 📚 최근 작업 내역
+* **2026-10-31**: [subtitle-to-speech 영화 대본 TTS 섀도잉 및 대용량 배치 슬라이서 구축](notes/2026-10-31-subtitle-to-speech-tts-shadowing-archive.md)
+  * IMSDb 원본 각본 기반 노팅힐 12개 메이저 챕터(936개 대사) 전편 수록
+  * 80ms 쿼드라틱 감쇄 및 60ms 무음 제로 패딩을 통한 오디오 팝/클릭 노이즈 완전 박멸
+  * 화자 성별 자동 감지 기반 남녀 배역 음성(`Puck`/`Kore`) 자동 분기
+  * 15개 대사 묶음 호출 및 RMS 침묵 탐지 슬라이서를 통한 API 요청수 92% 절감
+  * 백그라운드 사전 캐싱(Pre-cache) 파이프라인 및 드래그앤드롭 자막 임포트 지원
 * **2026-10-31**: [Antigravity CLI 다중 계정 분기 아키텍처 및 Magpie 게이트웨이 연동](notes/2026-10-31-antigravity-cli-multi-account-and-magpie-gateway.md)
   * Antigravity CLI 단일 키체인 저장 한계 및 외부 엔드포인트 우회 분석
   * Magpie 게이트웨이 기반 다중 계정 풀링, 자동 페일오버 및 계정 전환 메커니즘

@@ -13,6 +13,12 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
 ## 📚 목차
 
 ### 1. 작업 일지 (Daily Logs)
+* [2026-10-31: subtitle-to-speech 영화 대본 TTS 섀도잉 및 대용량 배치 슬라이서 구축](notes/2026-10-31-subtitle-to-speech-tts-shadowing-archive.md)
+  * IMSDb 원본 각본 기반 노팅힐 12개 메이저 챕터(936개 대사) 전편 수록
+  * 80ms 쿼드라틱 감쇄 및 60ms 무음 제로 패딩을 통한 오디오 팝/클릭 노이즈 완전 박멸
+  * 화자 성별 자동 감지 기반 남녀 배역 음성(`Puck`/`Kore`) 자동 분기
+  * 15개 대사 묶음 호출 및 RMS 침묵 탐지 슬라이서를 통한 API 요청수 92% 절감
+  * 백그라운드 사전 캐싱(Pre-cache) 파이프라인 및 드래그앤드롭 자막 임포트 지원
 * [2026-10-31: Antigravity CLI 다중 계정 분기 아키텍처 및 Magpie 게이트웨이 연동](notes/2026-10-31-antigravity-cli-multi-account-and-magpie-gateway.md)
   * Antigravity CLI 단일 키체인 저장 한계 및 외부 엔드포인트 우회 분석
   * Magpie 게이트웨이 기반 다중 계정 풀링, 자동 페일오버 및 계정 전환 메커니즘
@@ -52,6 +58,10 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
   * Antigravity CLI 단일 키체인 바인딩 제약과 커스텀 엔드포인트 우회 기법
   * Magpie 게이트웨이의 계정 풀링, 자동 페일오버 및 라운드로빈 메커니즘
   * Gateway Key 화이트리스트 바인딩을 활용한 계정 완전 격리 운용 전략
+* [문서 07: 영화 대본 TTS 오디오 파이프라인 및 침묵 탐지 슬라이싱 아키텍처](docs/07-subtitle-to-speech-audio-pipeline-and-slicing.md)
+  * 16-bit 24kHz Linear PCM 디클릭 신호 처리 및 끝단 제로 패딩
+  * 대용량 대본 청크 벌크 호출 및 국소 윈도우 RMS 침묵 탐지 분할 알고리즘
+  * 브라우저 WebAudio 하드웨어 버퍼 파쇄음 방어를 위한 단일 Audio 인스턴스 재사용 패턴
 
 ---
 
