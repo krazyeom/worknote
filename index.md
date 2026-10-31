@@ -8,6 +8,9 @@ title: "Engineering Worknotes"
 기술 설계, 구현 내역, 아키텍처 결정 사항(ADR)을 기록하는 작업 노트 저장소입니다.  
 GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈된 문서 구조를 유지합니다.
 
+> 🎬 **신규 프로젝트 [subtitle-to-speech](https://subtitle.krazyeom.com)**: 영화 대본 자막 TTS 섀도잉 플레이어  
+> [작업 일지 보기](notes/2026-10-31-subtitle-to-speech-tts-shadowing-archive.md) · [아키텍처 명세(문서 07) 보기](docs/07-subtitle-to-speech-audio-pipeline-and-slicing.md)
+
 ---
 
 ## 📚 목차
@@ -18,7 +21,8 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
   * 80ms 쿼드라틱 감쇄 및 60ms 무음 제로 패딩을 통한 오디오 팝/클릭 노이즈 완전 박멸
   * 화자 성별 자동 감지 기반 남녀 배역 음성(`Puck`/`Kore`) 자동 분기
   * 15개 대사 묶음 호출 및 RMS 침묵 탐지 슬라이서를 통한 API 요청수 92% 절감
-  * 백그라운드 사전 캐싱(Pre-cache) 파이프라인 및 드래그앤드롭 자막 임포트 지원
+  * 백그라운드 사전 캐싱(Pre-cache) 파이프라인 및 메인 화면 실시간 캐싱 진행도(%) 게이지
+  * 관리자(ADMIN) 권한 기반 자막 수정 제어 및 HMAC 보안 세션 인증
 * [2026-10-31: Antigravity CLI 다중 계정 분기 아키텍처 및 Magpie 게이트웨이 연동](notes/2026-10-31-antigravity-cli-multi-account-and-magpie-gateway.md)
   * Antigravity CLI 단일 키체인 저장 한계 및 외부 엔드포인트 우회 분석
   * Magpie 게이트웨이 기반 다중 계정 풀링, 자동 페일오버 및 계정 전환 메커니즘
