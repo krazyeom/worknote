@@ -1,3 +1,8 @@
+---
+layout: default
+title: "문서 02: 오디오 엔진 비교 및 iOS Safari 환경 분석"
+---
+
 # 문서 02: 오디오 엔진 비교 및 iOS Safari 환경 분석
 
 본 문서는 브라우저 내장 Web Speech API와 클라우드 24kHz Studio AI 오디오 엔진의 기술적 특성을 비교하고, iOS Safari의 미디어 정책 제약을 극복한 설계 방식을 정리합니다.

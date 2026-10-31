@@ -1,3 +1,8 @@
+---
+layout: default
+title: "2026-10-31 작업 노트: aWord 영한 대조 학습 엔진 및 블로그 다국어 시스템 구축"
+---
+
 # 2026-10-31 작업 노트: aWord 영한 대조 학습 엔진 및 블로그 다국어 시스템 구축
 
 * **작업 대상**: aWord Web Markdown Editor & Blog Platform

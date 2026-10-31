@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Engineering Worknotes"
+---
+
 # Engineering Worknotes
 
 기술 설계, 구현 내역, 아키텍처 결정 사항(ADR)을 기록하는 작업 노트 저장소입니다.  

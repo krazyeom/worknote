@@ -1,6 +1,12 @@
 title: "Engineering Worknotes"
 description: "기술 연구 및 아키텍처 작업 기록"
-theme: jekyll-theme-primer
 markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 permalink: /:categories/:title/
-highlighter: rouge
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"

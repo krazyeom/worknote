@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  
+  <!-- FOUC 방지용 인라인 테마 초기화 스크립트 -->
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('worknote_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+
+  <style>
+    /* CSS 변수 시스템 (Light / Dark) */
+    :root {
+      --bg-body: #FAFAFA;
+      --bg-header: rgba(255, 255, 255, 0.85);
+      --bg-surface: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --text-main: #1C1C1E;
+      --text-muted: #636366;
+      --border-color: #E5E5EA;
+      --border-light: #F2F2F7;
+      --link-color: #0071E3;
+      --link-hover: #0051A2;
+      --code-bg: #F2F2F7;
+      --code-border: #E5E5EA;
+      --code-text: #1C1C1E;
+      --pre-bg: #F6F8FA;
+      --table-border: #D1D1D6;
+      --table-stripe: #F9F9FB;
+      --accent-color: #F59E0B;
+      --accent-bg: rgba(245, 158, 11, 0.1);
+      --accent-border: rgba(245, 158, 11, 0.25);
+      --blockquote-border: #0071E3;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-header: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #121214;
+      --bg-header: rgba(18, 18, 20, 0.85);
+      --bg-surface: #1C1C1E;
+      --bg-card: #1C1C1E;
+      --text-main: #F2F2F7;
+      --text-muted: #AEAEB2;
+      --border-color: #2C2C2E;
+      --border-light: #242426;
+      --link-color: #2997FF;
+      --link-hover: #64B5F6;
+      --code-bg: #2C2C2E;
+      --code-border: #3A3A3C;
+      --code-text: #F2F2F7;
+      --pre-bg: #16181D;
+      --table-border: #38383A;
+      --table-stripe: #18181A;
+      --accent-color: #FBBF24;
+      --accent-bg: rgba(251, 191, 36, 0.12);
+      --accent-border: rgba(251, 191, 36, 0.3);
+      --blockquote-border: #2997FF;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
+      --shadow-header: 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+
+    /* 기본 레이아웃 및 폰트 */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.68;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 상단 네비게이션 헤더 */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background-color: var(--bg-header);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: var(--shadow-header);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.3);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+      background-color: var(--border-light);
+    }
+
+    /* 테마 토글 버튼 */
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 9px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: var(--text-muted);
+      background-color: var(--bg-surface);
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .theme-toggle-btn:hover {
+      color: var(--text-main);
+      border-color: var(--text-muted);
+      transform: translateY(-1px);
+    }
+
+    .theme-toggle-btn:active {
+      transform: translateY(0);
+    }
+
+    .theme-icon {
+      width: 15px;
+      height: 15px;
+      fill: currentColor;
+    }
+
+    /* 본문 컨테이너 */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 36px 24px 80px 24px;
+    }
+
+    /* 마크다운 타이포그래피 */
+    .content h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-top: 1.4em;
+      margin-bottom: 0.6em;
+      padding-bottom: 0.3em;
+      border-bottom: 1px solid var(--border-color);
+      line-height: 1.3;
+    }
+
+    .content > h1:first-child {
+      margin-top: 0;
+    }
+
+    .content h2 {
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      margin-top: 1.8em;
+      margin-bottom: 0.6em;
+      padding-bottom: 0.25em;
+      border-bottom: 1px solid var(--border-light);
+      line-height: 1.35;
+    }
+
+    .content h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-top: 1.4em;
+      margin-bottom: 0.5em;
+      line-height: 1.4;
+    }
+
+    .content h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 1.2em;
+      margin-bottom: 0.4em;
+    }
+
+    .content p {
+      margin-top: 0.8em;
+      margin-bottom: 0.8em;
+    }
+
+    .content a {
+      color: var(--link-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .content a:hover {
+      text-decoration: underline;
+      color: var(--link-hover);
+    }
+
+    .content hr {
+      border: 0;
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 2em 0;
+    }
+
+    .content ul, .content ol {
+      margin-top: 0.6em;
+      margin-bottom: 0.8em;
+      padding-left: 24px;
+    }
+
+    .content li {
+      margin-top: 0.3em;
+      margin-bottom: 0.3em;
+    }
+
+    .content blockquote {
+      border-left: 3.5px solid var(--blockquote-border);
+      padding: 8px 16px;
+      margin: 1.2em 0;
+      background-color: var(--border-light);
+      color: var(--text-muted);
+      border-radius: 0 6px 6px 0;
+    }
+
+    /* 코드 블록 및 인라인 코드 */
+    .content code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13.5px;
+      background-color: var(--code-bg);
+      border: 1px solid var(--code-border);
+      color: var(--code-text);
+      padding: 2px 5px;
+      border-radius: 5px;
+    }
+
+    .content pre {
+      background-color: var(--pre-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 1.2em 0;
+      line-height: 1.5;
+    }
+
+    .content pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-main);
+      font-size: 13px;
+    }
+
+    /* 표(Table) 스타일링 */
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.4em 0;
+      font-size: 14px;
+    }
+
+    .content th, .content td {
+      border: 1px solid var(--table-border);
+      padding: 9px 13px;
+      text-align: left;
+    }
+
+    .content th {
+      background-color: var(--border-light);
+      font-weight: 600;
+    }
+
+    .content tr:nth-child(even) td {
+      background-color: var(--table-stripe);
+    }
+
+    /* 하단 푸터 */
+    .site-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 28px 24px;
+      margin-top: 40px;
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    /* 모바일 반응형 조절 */
+    @media (max-width: 640px) {
+      .header-inner {
+        padding: 10px 16px;
+      }
+      .container {
+        padding: 24px 16px 60px 16px;
+      }
+      .content h1 {
+        font-size: 24px;
+      }
+      .content h2 {
+        font-size: 19px;
+      }
+      .theme-btn-text {
+        display: none;
+      }
+    }
+  </style>
+
+  <!-- Mermaid.js 라이브러리 및 테마 연동 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      try {
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: currentTheme === 'dark' ? 'dark' : 'default',
+          securityLevel: 'loose'
+        });
+        
+        // mermaid 코드 블록 감지 후 렌더링
+        var mermaidBlocks = document.querySelectorAll('pre code.language-mermaid, div.language-mermaid pre code');
+        mermaidBlocks.forEach(function(codeBlock) {
+          var pre = codeBlock.closest('pre');
+          var container = document.createElement('div');
+          container.className = 'mermaid';
+          container.textContent = codeBlock.textContent;
+          pre.parentNode.replaceChild(container, pre);
+        });
+        
+        mermaid.run();
+      } catch (err) {
+        console.warn('[Mermaid error]', err);
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <!-- 상단 고정 헤더 -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="{{ site.baseurl }}/" class="brand-link" title="메인 목차로 이동">
+        <div class="brand-badge">W</div>
+        <span>Engineering Worknotes</span>
+      </a>
+
+      <div class="header-actions">
+        <a href="https://github.com/krazyeom/worknote" target="_blank" rel="noopener noreferrer" class="nav-btn" title="GitHub 저장소 열기">
+          GitHub
+        </a>
+
+        <!-- 다크/라이트 테마 전환 토글 버튼 -->
+        <button id="themeToggleBtn" class="theme-toggle-btn" type="button" aria-label="테마 전환" title="어두운 테마 / 밝은 테마 전환">
+          <svg id="moonIcon" class="theme-icon" viewBox="0 0 24 24" style="display: none;">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg id="sunIcon" class="theme-icon" viewBox="0 0 24 24" style="display: none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span id="themeBtnText" class="theme-btn-text">테마</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 마크다운 메인 콘텐츠 영역 -->
+  <main class="container">
+    <article class="content">
+      {{ content }}
+    </article>
+  </main>
+
+  <!-- 하단 푸터 -->
+  <footer class="site-footer">
+    <p>Engineering Worknotes &copy; 2026 Sungwook Yeom (krazyeom). All rights reserved.</p>
+    <div class="footer-links">
+      <a href="{{ site.baseurl }}/" class="nav-btn">메인 목차</a>
+      <a href="https://github.com/krazyeom/worknote" target="_blank" rel="noopener noreferrer" class="nav-btn">GitHub 저장소</a>
+    </div>
+  </footer>
+
+  <!-- 테마 인터랙션 핸들러 스크립트 -->
+  <script>
+    (function() {
+      var btn = document.getElementById('themeToggleBtn');
+      var sunIcon = document.getElementById('sunIcon');
+      var moonIcon = document.getElementById('moonIcon');
+      var btnText = document.getElementById('themeBtnText');
+
+      function updateUI(theme) {
+        if (theme === 'dark') {
+          sunIcon.style.display = 'block';
+          moonIcon.style.display = 'none';
+          if (btnText) btnText.textContent = '밝은 테마';
+          btn.setAttribute('title', '밝은 테마로 전환');
+        } else {
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'block';
+          if (btnText) btnText.textContent = '어두운 테마';
+          btn.setAttribute('title', '어두운 테마로 전환');
+        }
+      }
+
+      var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      updateUI(currentTheme);
+
+      btn.addEventListener('click', function() {
+        var activeTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        var nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', nextTheme);
+        try {
+          localStorage.setItem('worknote_theme', nextTheme);
+        } catch (e) {}
+        
+        updateUI(nextTheme);
+
+        // Mermaid 다이어그램이 존재하는 경우 테마 재적용
+        if (window.mermaid) {
+          try {
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: nextTheme === 'dark' ? 'dark' : 'default'
+            });
+            mermaid.run();
+          } catch (_) {}
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
