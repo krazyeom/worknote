@@ -140,6 +140,14 @@ Magpie App GUI에서 Antigravity 계정 전환은 다음 세 가지 경로로 �
 
 ---
 
+### J. 영문 기술 문서화 및 README 안내 서식 정제
+* **저장소 문서 언어 정합성 확보**:
+  * Magpie의 기본 리포지토리 문서가 영문으로 구성되어 있음에 맞추어, Antigravity 기술 가이드([docs/antigravity-guide.md](file:///Users/krazyeom/dev/magpie/docs/antigravity-guide.md)) 전체를 전문 영문 기술 명세로 작성했습니다.
+* **README 공지 영문화 및 마크다운 링크 서식 교정**:
+  * 마크다운 파서 및 GitHub 뷰어에서 링크 바깥의 이중 강조 기호(`**[Link](...)**`)가 리터럴 `**`로 깨져 보이는 문제를 해결하기 위해 표준 링크 서식(`[Antigravity Guide](docs/antigravity-guide.md)`)으로 교정하고 안내 문구를 영문화했습니다.
+
+---
+
 ## 3. 기술 결정 사항 (ADR 요약)
 
 | 결정 주제 | 채택한 방안 | 기각된 대안 및 사유 |
