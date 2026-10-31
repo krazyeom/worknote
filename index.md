@@ -23,6 +23,8 @@ GitHub Pages 및 마크다운 뷰어에서 바로 열람할 수 있도록 정돈
   * 15개 대사 묶음 호출 및 RMS 침묵 탐지 슬라이서를 통한 API 요청수 92% 절감
   * 백그라운드 사전 캐싱(Pre-cache) 파이프라인 및 메인 화면 실시간 캐싱 진행도(%) 게이지
   * 관리자(ADMIN) 권한 기반 자막 수정 제어 및 HMAC 보안 세션 인증
+  * 다크/라이트 테마 전환 시스템 및 Anti-FOUC 하이드레이션 구축
+  * 모바일 뷰포트(360~390px) 상단 메뉴 겹침 해소 및 반응형 타이포그래피 최적화
 * [2026-10-31: Antigravity CLI 다중 계정 분기 아키텍처 및 Magpie 게이트웨이 연동](notes/2026-10-31-antigravity-cli-multi-account-and-magpie-gateway.md)
   * Antigravity CLI 단일 키체인 저장 한계 및 외부 엔드포인트 우회 분석
   * Magpie 게이트웨이 기반 다중 계정 풀링, 자동 페일오버 및 계정 전환 메커니즘
