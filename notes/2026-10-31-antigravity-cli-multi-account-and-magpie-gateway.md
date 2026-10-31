@@ -73,6 +73,18 @@ Antigravity CLI 기동 시 특정 계정만 배타적으로 사용해야 하는 
 * 시스템 전체의 Antigravity 및 Gemini CLI 세션에 일관되게 적용되는 공통 규칙을 `~/.gemini/GEMINI.md` 및 `~/.gemini/config/GEMINI.md`에 배포했습니다.
 * **5대 보안 원칙 (Security Zero-Leak)**:
   * API Key, 비밀번호, 사설 IP, PII(개인정보), `.env` 실제 값의 커밋 및 문서 노출을 전면 금지했습니다.
+
+---
+
+### F. Antigravity Pool 통합 CLI 래퍼 (`agyp`) 개발 및 배포
+* 다중 계정 자동 Failover 풀링과 수동 계정 선택을 단일 명령어로 제어할 수 있는 CLI 도구 [`agyp`](~/.local/bin/agyp) 및 심볼릭 링크 [`agy-pool`](~/.local/bin/agy-pool)을 개발하여 `~/.local/bin/`에 배포했습니다.
+* **주요 기능**:
+  * `agyp`: 등록된 모든 계정의 자동 Failover 풀링 상태로 agy 실행
+  * `agyp -a <계정>`: 지정한 계정을 1순위로 지정하여 선택 실행
+  * `agyp list`: 계정 목록 및 실시간 쿼터 확인
+  * `agyp add`: 새 구글/Antigravity 계정 간편 추가
+  * `agyp switch <계정>`: 기본 1순위 주 계정 변경
+  * `agyp status`: 게이트웨이 기동 및 연결 상태 점검
 * **업무 일지 표준 규격 동기화**:
   * `krazyeom/worknote` 저장소와 연동하여 작업 내역이 누락 없이 GitHub Pages 규격으로 정리되도록 정의했습니다.
 

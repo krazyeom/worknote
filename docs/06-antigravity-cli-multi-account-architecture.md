@@ -89,19 +89,58 @@ func antigravityPoolModels(ctx context.Context) ([]catalog.Model, error) {
 
 ---
 
-## 4. 실무 운용 전략
+## 4. 실무 운용 도구: `agyp` (`agy-pool`)
+
+다중 계정 풀링과 수동 계정 선택을 원클릭으로 결합한 통합 CLI 도구 `agyp`([~/.local/bin/agyp](file:///Users/krazyeom/.local/bin/agyp))를 구현 및 배포했습니다:
+
+### 4.1 기본 실행 (자동 Failover 풀링)
+```bash
+# 등록된 모든 계정의 쿼터를 하나로 묶어 자동 페일오버로 실행
+agyp
+
+# 단일 프롬프트 실행 및 옵션 전달
+agyp -p "코드베이스 구조 분석해줘"
+```
+
+### 4.2 수동 계정 선택 실행
+```bash
+# 특정 계정(이메일 또는 별칭)을 1순위로 지정하여 실행
+agyp -a work@example.com
+
+# 또는
+agyp --account work@example.com
+```
+
+### 4.3 계정 풀 관리 서브커맨드
+```bash
+# 계정 목록 및 실시간 쿼터 확인
+agyp list
+
+# 새로운 구글 계정 간편 추가 (브라우저 OAuth)
+agyp add
+
+# 기본 1순위 계정 변경
+agyp switch sub@example.com
+
+# 게이트웨이 및 풀링 연결 상태 점검
+agyp status
+```
+
+---
+
+## 5. 실무 운용 전략 상세
 
 ### 전략 1: 쿼터 통합 풀링 모드 (권장: 일반 개발용)
 모든 계정을 등록해두고 쿼터를 최대로 활용하는 방식입니다.
 ```bash
 # 1. 계정 등록
-magpie accounts add antigravity
+agyp add
 
 # 2. 계정 순서 및 상태 확인
-magpie accounts antigravity
+agyp list
 
 # 3. 필요 시 1순위 계정 전환
-magpie accounts switch antigravity primary@example.com
+agyp switch primary@example.com
 ```
 
 ### 전략 2: 계정 완전 격리 모드 (권장: 업무/개인 분리)
@@ -115,13 +154,13 @@ magpie gateway-key add agy-personal
 magpie gateway-key accounts agy-personal antigravity/personal@example.com
 
 # 2. 셸 프로필(~/.zshrc 등)에 전용 명령어 등록
-alias agy-work='GEMINI_API_KEY="<work-key>" GOOGLE_GEMINI_BASE_URL="http://127.0.0.1:51121" agy'
-alias agy-personal='GEMINI_API_KEY="<personal-key>" GOOGLE_GEMINI_BASE_URL="http://127.0.0.1:51121" agy'
+alias agy-work='GEMINI_API_KEY="<work-key>" GOOGLE_GEMINI_BASE_URL="http://127.0.0.1:3425" agy'
+alias agy-personal='GEMINI_API_KEY="<personal-key>" GOOGLE_GEMINI_BASE_URL="http://127.0.0.1:3425" agy'
 ```
 
 ---
 
-## 5. 향후 확장 고려 사항 (Feature Backlog)
+## 6. 향후 확장 고려 사항 (Feature Backlog)
 
 1. **`magpie agy` CLI 계정 플래그 지원**:
    - `magpie agy run --account <email>` 인자를 파싱하여 지정 계정 전용 임시 키를 자동 주입하는 편의 기능.
