@@ -43,12 +43,13 @@
   - 기술 가이드 문서(`docs/lotteimall-technical-guide.md`)에 점검 대응 프로토콜 반영.
 
 ### D. 신세계백화점 (`shinsegaedept`) 11월 제휴 하나카드 출석 챌린지 연동
-* **파일**: `lib/shinsegaedept.mjs`, `docs/shinsegae-card-attendance-technical-guide.md`
+* **파일**: `lib/shinsegaedept.mjs`, `lib/sites.mjs`, `docs/shinsegae-card-attendance-technical-guide.md`
 * **배경**: 10월 리워드 캘린더 종료로 중단 가드가 걸려 있던 상황에서, 11월 제휴 하나카드 출석 챌린지(`3762816184550044722`, 11/2 ~ 11/15) 단독 오픈.
 * **조치 사항**:
   - `SHINSEGAE_CARD_EVENTS`에 11월 하나카드 매핑 등록 (이벤트 코드: `3762816184550044722`, 내부 경로: `EVT_DAILY_HANA_202611`, 기간: `2026-11-02` ~ `2026-11-15`).
   - 일반 리워드 캘린더 미오픈 상태에서도 오류 없이 제휴 카드 출석이 단독 진행되도록 예외 격리 로직 적용.
-  - `site_settings`의 `circuit_status` 및 `status`를 `active`/`dev`로 재가동하고 전체 23개 계정 일괄 응모 검증.
+  - `site_settings`의 `circuit_status` 및 `status`를 `active`로 재가동하고, `min_tier`를 `member`, `access_mode`를 `all`로 설정하여 셜리(3개) 및 ㅇㅋ(10개) 계정을 포함한 전체 23개 계정에 대한 자동 응모 및 권한을 완전 개방.
+  - Next.js 프로덕션 빌드(`npm run build`) 및 PM2 데몬 재기동 완료.
 
 ---
 
