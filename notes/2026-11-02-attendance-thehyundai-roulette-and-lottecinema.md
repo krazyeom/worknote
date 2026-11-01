@@ -39,6 +39,7 @@
 * **조치 사항**:
   - 응답 본문 내 `서비스 점검`, `error_notice service` 키워드 및 점검 시간 정규식 검사 로직 추가.
   - 점검 감지 시 `"롯데홈쇼핑 서비스 점검 중입니다. ({점검 시간})"` 메시지를 명확히 반환하도록 예외 처리.
+  - Next.js 프로덕션 환경(`attendance-check`) 번들 최신화를 위해 `npm run build` 수행 및 PM2 서비스 재가동 완료.
   - 기술 가이드 문서(`docs/lotteimall-technical-guide.md`)에 점검 대응 프로토콜 반영.
 
 ### D. 신세계백화점 (`shinsegaedept`) 11월 제휴 하나카드 출석 챌린지 연동
