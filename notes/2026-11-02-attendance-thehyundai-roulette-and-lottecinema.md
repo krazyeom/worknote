@@ -82,6 +82,17 @@
   - 관리자 UI (`app/admin/pocketcu/page.js`): 14:00 자동 스나이퍼 상태 배지를 `비활성화됨`으로 전환하고 종료 안내 문구 반영.
   - 기술 가이드 문서(`docs/pocketcu-technical-guide.md`)에 11월 비활성화 내역 기록.
 
+### G. 서울사랑상품권 (서울Pay+) HAR 세션 갱신 및 SQLite 바인딩 예외 패치
+* **파일**: `lib/seoulpay.mjs`, `docs/seoulpay-technical-guide.md`, `docs/DAILY_WORK_LOG.md`
+* **배경**: 사용자 업로드 HAR 파일(`1793599321408_seoul-wapi_bizplay_co_kr_11-02-2026-15-0.har`)을 이용한 서울Pay+ 세션 갱신 및 기존 만료 세션으로 인한 모니터링 루프 에러 해소.
+* **조치 사항**:
+  1. **SQLite `node:sqlite` 파라미터 바인딩 예외 수정 (`lib/seoulpay.mjs`)**:
+     - `saveSeoulPayAccount`에서 `undefined` 전달 시 발생하는 `TypeError: Provided value cannot be bound to SQLite parameter`를 방지하기 위해 전체 바인딩 파라미터에 `?? null` 널 병합 연산자 적용.
+  2. **HAR 세션 파싱 및 계정 정보 갱신**:
+     - 업로드된 HAR 파일에서 마스터 계정(염성욱)의 최신 쿠키 및 결제 수단(롯데체크카드 등)을 추출하여 DB에 반영.
+  3. **모니터링 검색 전담 및 구매 우선순위 전환**:
+     - 검색 전담 계정(`is_search_account = 1`)과 구매 1순위 계정을 마스터 계정으로 전환하여 백그라운드 모니터링 루프 정상화.
+
 ---
 
 ## 3. 검증 결과
@@ -96,7 +107,10 @@
    - 셜리 계정(3개), ㅇㅋ 계정(10개) 및 전 계정 4대 카드(BC바로, 삼성, 하나, 신한) 출석 1일 차 완료 (`status: success`).
 3. **네이버 카페 자동 포스팅 검증**:
    - 11월 2일 기준 `1일 차` 자동 계산 및 실게시 완료 (글 번호: `75509`).
-4. **서비스 재가동 및 헬스체크**:
+4. **서울사랑상품권 실시간 모니터링 및 세션 검증**:
+   - WAPI 상품권 목록 53건 조회 정상 응답 (HTTP 200).
+   - 잔여 상품권 감지 루프 정상 가동 및 `세션이 만료되었습니다` 에러 완전 해소.
+5. **서비스 재가동 및 헬스체크**:
    - `attendance-check` (id 16): `online`
    - `attendance-check-worker` (id 17): `online`
    - DB 무결성: `PRAGMA integrity_check` $\rightarrow$ `ok`
