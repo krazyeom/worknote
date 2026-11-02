@@ -115,6 +115,11 @@
      - `seoulpay_config` 테이블의 쿠키, 단말 User-Agent, userNo, 결제수단 일체를 새 계정 정보로 실시간 동기화.
   3. **HAR 임포트 연동**:
      - HAR 반영 계정을 검색 계정으로 즉시 활성화하여 브라우저 새로고침 시 즉각 반영되도록 조치.
+  4. **비즈플레이 리프레시 토큰 기반 원클릭 & 무중단 자가치유(Self-Healing) 세션 연장 시스템 구축**:
+     - **프로토콜 분석**: 비즈플레이 서울Pay+ 앱 로그인 시 발급되는 `refreshToken`의 유효기간이 1년(~2027년)임을 확인하고, `POST https://seoul-wapi.bizplay.co.kr/wapi/app/token/refresh` 엔드포인트를 발굴.
+     - **DB 영구 보관**: `seoulpay_accounts` 및 `seoulpay_config` 테이블에 `refresh_token` 컬럼을 신설하고 전 계정 토큰 등록.
+     - **자가치유(Self-Healing)**: 상품권 목록 조회(`fetchSeoulPayCertificates`) 및 구매 시도(`executeSeoulPayPurchase`) 중 세션 만료 감지 시 자동으로 리프레시 토큰을 호출해 세션을 즉시 갱신하고 재시도하는 회복 메커니즘 탑재.
+     - **관리자 UI 원클릭 갱신**: 대시보드 상단 글로벌 버튼(`[🔄 세션 즉시 갱신]`), 계정 관리 탭 헤더(`[🔄 전 계정 세션 즉시 갱신]`), 각 계정 카드별(`[🔄 세션 갱신]`) 버튼을 배치하여 수동 본인인증이나 HAR 업로드 없이 원클릭 세션 연장 지원.
 
 ---
 
