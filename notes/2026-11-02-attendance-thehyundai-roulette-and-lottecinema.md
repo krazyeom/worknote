@@ -42,19 +42,20 @@
   - Next.js 프로덕션 환경(`attendance-check`) 번들 최신화를 위해 `npm run build` 수행 및 PM2 서비스 재가동 완료.
   - 기술 가이드 문서(`docs/lotteimall-technical-guide.md`)에 점검 대응 프로토콜 반영.
 
-### D. 신세계백화점 (`shinsegaedept`) 11월 제휴 4대 카드사(BC·삼성·하나·신한) 출석 챌린지 전면 연동
-* **파일**: `lib/shinsegaedept.mjs`, `lib/sites.mjs`, `docs/shinsegae-card-attendance-technical-guide.md`
-* **배경**: 11월 2일 00시부터 11월 15일 23:59까지 신세계 제휴 4대 카드사(BC바로카드, 삼성카드, 하나카드, 신한카드) 출석 챌린지가 동시 오픈됨.
-* **4대 카드사 이벤트 매핑 및 단축 링크 규격**:
-  - **BC바로카드**: 이벤트 코드 `7075491895546425394` / 단축 URL `https://deptapp.shinsegae.com/yxkfcc` / 화면 ID `EVT_DAILY_BC_202611`
-  - **삼성카드**: 이벤트 코드 `3846974798193255477` / 단축 URL `https://deptapp.shinsegae.com/x6mqnzf` / 화면 ID `EVT_DAILY_SAMSUNG_202611`
-  - **하나카드**: 이벤트 코드 `3762816184550044722` / 단축 URL `https://deptapp.shinsegae.com/5v5iz6p` / 화면 ID `EVT_DAILY_HANA_202611`
-  - **신한카드**: 이벤트 코드 `4122026423680067169` / 단축 URL `https://deptapp.shinsegae.com/uouxh2` / 화면 ID `EVT_DAILY_SHINHAN_202611`
+### D. 신세계백화점 (`shinsegaedept`) 11월 리워드 챌린지(메인) 및 제휴 4대 카드사(서브) 통합 파이프라인 구축
+* **파일**: `lib/shinsegaedept.mjs`, `lib/sites.mjs`, `docs/shinsegae-dept-technical-guide.md`, `docs/shinsegae-card-attendance-technical-guide.md`
+* **이벤트 체계**:
+  1. **[메인] 신세계 리워드 챌린지** (단축링크: `https://deptapp.shinsegae.com/s4xdodj` / 이벤트 코드: `7292516610982097714` / 기간: `11월 1일 ~ 11월 30일`)
+  2. **[서브] 제휴 4대 카드사 출석 챌린지** (기간: `11월 2일 ~ 11월 15일` 한정)
+     - BC바로카드: `7075491895546425394` / `https://deptapp.shinsegae.com/yxkfcc`
+     - 삼성카드: `3846974798193255477` / `https://deptapp.shinsegae.com/x6mqnzf`
+     - 하나카드: `3762816184550044722` / `https://deptapp.shinsegae.com/5v5iz6p`
+     - 신한카드: `4122026423680067169` / `https://deptapp.shinsegae.com/uouxh2`
 * **조치 사항**:
-  - `SHINSEGAE_CARD_EVENTS`에 11월 4개 카드사 정보 완전 등록 (`yearMonth: '202611'`).
-  - 단일 로그인 세션(JWT Bearer)으로 4개 카드사 출석 엔드포인트(`GET /fo-api/evt/event/v1/card-attendance/{eventCode}`)를 연속 호출하여 1회 실행으로 4종 모두 자동 응모.
-  - 리워드 캘린더와 제휴 카드 출석의 격리 처리로 메인 캘린더 상태와 무관하게 카드 출석이 멱등적이고 안전하게 실행되도록 보장.
-  - `site_settings`의 `circuit_status` 및 `status`를 `active`로 재가동하고, `min_tier`를 `member`, `access_mode`를 `all`로 설정하여 셜리(3개) 및 ㅇㅋ(10개) 계정을 포함한 전체 23개 계정에 대한 자동 응모 및 권한을 완전 개방.
+  - `discoverEvents`: 11월 리워드 챌린지 기본 fallback 코드를 `7292516610982097714`로 갱신하여 30일까지 메인 출석체크 수행.
+  - `runShinsegaeDept`: 단일 세션(JWT Bearer)으로 [메인] 리워드 챌린지 응모 -> [서브] 4대 카드사 순차 응모 -> [마일리지] 잔여 마일리지 조회의 3단계 파이프라인 확립.
+  - 사이트 설정(`lib/sites.mjs`): `eventName`을 `'리워드 챌린지 & 카드 4종 출석'`으로 갱신.
+  - 전수 실행 검증: 셜리(3개) 및 ㅇㅋ(10개) 계정을 포함한 등록 활성 계정 전체(23개 계정)에 대해 메인 리워드 챌린지 및 서브 카드 4종 일괄 실행 완료 (`리워드 출석 완료 (누적 1일) · 카드 4종 완료 (BC 1일, 삼성 1일, 하나 1일, 신한 1일) · 잔여: ...R`).
   - Next.js 프로덕션 빌드(`npm run build`) 및 PM2 데몬 재기동 완료.
 
 ### E. 네이버 카페 자동 & 수동 포스팅 `[n]`일 차 매월 자동 초기화 구축 및 11월 1일 차 갱신
