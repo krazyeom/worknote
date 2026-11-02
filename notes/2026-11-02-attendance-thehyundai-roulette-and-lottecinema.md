@@ -42,12 +42,18 @@
   - Next.js 프로덕션 환경(`attendance-check`) 번들 최신화를 위해 `npm run build` 수행 및 PM2 서비스 재가동 완료.
   - 기술 가이드 문서(`docs/lotteimall-technical-guide.md`)에 점검 대응 프로토콜 반영.
 
-### D. 신세계백화점 (`shinsegaedept`) 11월 제휴 하나카드 출석 챌린지 연동
+### D. 신세계백화점 (`shinsegaedept`) 11월 제휴 4대 카드사(BC·삼성·하나·신한) 출석 챌린지 전면 연동
 * **파일**: `lib/shinsegaedept.mjs`, `lib/sites.mjs`, `docs/shinsegae-card-attendance-technical-guide.md`
-* **배경**: 10월 리워드 캘린더 종료로 중단 가드가 걸려 있던 상황에서, 11월 제휴 하나카드 출석 챌린지(`3762816184550044722`, 11/2 ~ 11/15) 단독 오픈.
+* **배경**: 11월 2일 00시부터 11월 15일 23:59까지 신세계 제휴 4대 카드사(BC바로카드, 삼성카드, 하나카드, 신한카드) 출석 챌린지가 동시 오픈됨.
+* **4대 카드사 이벤트 매핑 및 단축 링크 규격**:
+  - **BC바로카드**: 이벤트 코드 `7075491895546425394` / 단축 URL `https://deptapp.shinsegae.com/yxkfcc` / 화면 ID `EVT_DAILY_BC_202611`
+  - **삼성카드**: 이벤트 코드 `3846974798193255477` / 단축 URL `https://deptapp.shinsegae.com/x6mqnzf` / 화면 ID `EVT_DAILY_SAMSUNG_202611`
+  - **하나카드**: 이벤트 코드 `3762816184550044722` / 단축 URL `https://deptapp.shinsegae.com/5v5iz6p` / 화면 ID `EVT_DAILY_HANA_202611`
+  - **신한카드**: 이벤트 코드 `4122026423680067169` / 단축 URL `https://deptapp.shinsegae.com/uouxh2` / 화면 ID `EVT_DAILY_SHINHAN_202611`
 * **조치 사항**:
-  - `SHINSEGAE_CARD_EVENTS`에 11월 하나카드 매핑 등록 (이벤트 코드: `3762816184550044722`, 내부 경로: `EVT_DAILY_HANA_202611`, 기간: `2026-11-02` ~ `2026-11-15`).
-  - 일반 리워드 캘린더 미오픈 상태에서도 오류 없이 제휴 카드 출석이 단독 진행되도록 예외 격리 로직 적용.
+  - `SHINSEGAE_CARD_EVENTS`에 11월 4개 카드사 정보 완전 등록 (`yearMonth: '202611'`).
+  - 단일 로그인 세션(JWT Bearer)으로 4개 카드사 출석 엔드포인트(`GET /fo-api/evt/event/v1/card-attendance/{eventCode}`)를 연속 호출하여 1회 실행으로 4종 모두 자동 응모.
+  - 리워드 캘린더와 제휴 카드 출석의 격리 처리로 메인 캘린더 상태와 무관하게 카드 출석이 멱등적이고 안전하게 실행되도록 보장.
   - `site_settings`의 `circuit_status` 및 `status`를 `active`로 재가동하고, `min_tier`를 `member`, `access_mode`를 `all`로 설정하여 셜리(3개) 및 ㅇㅋ(10개) 계정을 포함한 전체 23개 계정에 대한 자동 응모 및 권한을 완전 개방.
   - Next.js 프로덕션 빌드(`npm run build`) 및 PM2 데몬 재기동 완료.
 
