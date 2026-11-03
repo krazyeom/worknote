@@ -74,7 +74,12 @@ tags: [lottedpt, coupon, dongtan, beauty-sampling, free-coffee, burst-sniper, au
    - `runLotteDeptAllStoresDailyScan()`을 통해 매일 03:00 28개 지점의 신규 쿠폰을 스캔하여 오픈 대기 쿠폰을 `lottedpt_coupon_reservations`에 선착순 예약으로 자동 적재.
    - 관리자 UI에 `선착순 예약 & 부스터` 탭, 수동 예약 모달, 즉시 부스터 실행 기능 완비.
    - 금일 15:00 동탄점 무료 커피 3종(`CPM00000000000140886`) 예약 등록 완료.
-5. **프로덕션 빌드 및 무중단 배포**:
+5. **최소 수량 오름차순(30 -> 50 -> 100) 우선 순위 타격 및 단건(allDownYn='N') 스나이핑 개편**:
+   - 상단부터 순차 호출하거나 일괄 수령에만 의존하지 않고, 한정 수량이 적은 희귀 품목부터 먼저 개별 선점하도록 개선.
+   - `parseCouponSubItems()` 엔진 추가: 상세 HTML의 `__content--thumb` 블록에서 잔여/총수량을 파싱하여 `qty ASC` 자동 정렬.
+   - 뷰티 13종 품목 우선순위 조정: 30명 한정(라로제, 시슬리, 끌레드뽀보떼) -> 50명 한정(딥티크, 로마, 조말론, 로라메르시에, 숨, 빌리프) -> 100명 한정(헤라, 베르사체, 설화수, 오휘) 순서로 타격.
+   - 100ms 버스트 시 최소 수량 단건(`allDownYn='N'`)과 일괄(`allDownYn='Y'`) 병렬 발사, 안전망에서도 최저 수량 품목부터 모든 계정이 먼저 확보한 후 다음 품목으로 순회.
+6. **프로덕션 빌드 및 무중단 배포**:
    - Next.js 16.4.3 빌드 성공 (Turbopack) 및 PM2 프로세스(`attendance-check`, `attendance-check-worker`) 무중단 재기동 완료.
 
 ---
