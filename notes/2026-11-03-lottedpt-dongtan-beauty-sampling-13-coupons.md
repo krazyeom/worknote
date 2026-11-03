@@ -12,8 +12,10 @@ tags: [lottedpt, coupon, dongtan, beauty-sampling, free-coffee, burst-sniper, au
   - `https://m.lotteshopping.com/cpn/gate/CPM00000000000140892/lms` (동탄점 무료 커피) 등 동탄점 선착순 쿠폰이 다수 존재하며, "12시 정각(땡)에 시작하면 레이턴시로 늦을 수 있다"는 우려에 따라 선제 버스트 스나이퍼 구축 및 동탄점 혜택 전수 수령 요청 접수.
 - **핵심 목표**:
   1. 동탄점 지점 상시 쿠폰(금액할인권, 생활용품, 수입 그로서리, 구매 감사품) 33종 전 계정 즉시 발급.
-  2. 12:00 오픈 뷰티 13종(`CPM...140651`) 및 무료 커피 3종(`CPM...140892`)에 대해 11:59:58(T-2.0초 전) 300ms 고속 버스트 스나이퍼 파이프라인 가동.
-  3. 15:00 오픈 무료 커피 3종(`CPM...140886`) 스케줄러 자동 등록.
+  2. 12:00 오픈 뷰티 13종(`CPM...140651`) 및 무료 커피 3종(`CPM...140892`)에 대해 11:59:58(T-1.8초 전) 100ms 초당 10회 초정밀 버스트 스나이퍼 파이프라인 가동.
+  3. 신규 롯데 계정 2개(`도도1`: `ogounii`, `도도2`: `ogouniii`) 등록, 롯데백화점 전용 SSO(`ccoSiteNo: 1065`) 세션 발급 완료.
+  4. 신규 2개 계정에 대해 `skip_daily: 1`을 부여하여 매일 쿠폰 탐색에서는 격리하고 이번 동탄점 선착순 버스트(총 5개 계정)에 온전히 참여하도록 구성.
+  5. 15:00 오픈 무료 커피 3종(`CPM...140886`) 스케줄러 자동 등록.
 
 ---
 
@@ -43,9 +45,15 @@ tags: [lottedpt, coupon, dongtan, beauty-sampling, free-coffee, burst-sniper, au
    - 전 계정에 대해 **100ms 간격(1초당 10회 호출)**으로 병렬 일괄 다운로드(`allDownYn='Y'`)를 연속 발사.
    - 최초 발급 승인이 감지되더라도 조기 종료하지 않고 **12시 0분 3초(`untilSeconds: 3`) 도달 시까지 초당 10회 호출을 유지**하여 3개 계정 및 16종 전 품목이 온전히 선점되도록 보장.
    - 12:00:03 도달 즉시 16종 전 품목 개별 다운로드 2차 안전망을 순차 가동.
-2. **15:00 무료 커피 자동 연동**:
+2. **신규 계정(도도1, 도도2) 등록 및 백화점 전용 SSO(`ccoSiteNo: 1065`) 세션 발급**:
+   - 롯데백화점 mapi(`POST /member/itg-login2`)는 백화점 제휴 코드(`ccoSiteNo: 1065`)로 발급된 L.POINT 토큰만 승인하는 제약이 존재.
+   - 백화점 웹뷰 SSO 게이트(`/memberSso/memberSsoView`)의 L.POINT 연동 라이브러리를 통해 백화점 제휴 코드로 인증하여 `도도1`(`ogounii`, 이*지, AVE-ORANGE)과 `도도2`(`ogouniii`, 이*희, AVE-ORANGE) 모두 정식 세션 교환을 성공적으로 완수.
+3. **계정 분리 격리 정책 (`skip_daily: 1`)**:
+   - 신규 2개 계정은 `token` JSON 내 `skip_daily: 1`을 지정하여 매일 지점별 일일 쿠폰 탐색(`runLotteDeptDailyCoupons`) 및 매월 VIP 식사권 탐색(`runLotteDeptMonthlyProbe`)에서 완전 제외.
+   - 12:00 / 15:00 동탄점 스나이퍼 버스트(`downloadLotteDeptDongtanSniper`)에는 기존 3개 계정에 2개 계정이 추가된 총 5개 계정이 모두 병렬 참여하도록 구현.
+4. **15:00 무료 커피 자동 연동**:
    - 14:59:58.200부터 15:00:03까지 동일한 100ms(초당 10회) 버스트가 자동 실행되도록 워커 스케줄러 등록.
-3. **CLI 및 관리자 API**:
+5. **CLI 및 관리자 API**:
    - `node scripts/download-lottedpt-dongtan-beauty.mjs --sniper --target=12pm`
    - `POST /api/admin/lottedpt-coupon` (`action: "sniper_dongtan"`)
 
