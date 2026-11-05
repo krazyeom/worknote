@@ -1,0 +1,61 @@
+---
+layout: note
+title: "롯데백화점 잠실점 2026 크리스마스 마켓 패스트패스 쿠폰 역공학 및 전 계정 일괄 발급"
+date: 2026-11-05
+tags: [lottedpt, coupon, christmas-market, fastpass, jamsil, automation, har-analysis]
+---
+
+# 롯데백화점 잠실점 2026 크리스마스 마켓 패스트패스 쿠폰 역공학 및 전 계정 일괄 발급
+
+## 1. 작업 개요
+- **배경**:
+  - `https://m.lotteshopping.com/shpgnews/gate/SNM00000000000567275/C10901` (2026 롯데타운 크리스마스 마켓 얼리버드 프로모션) 게이트 소식 내 포함된 패스트패스 입장권 쿠폰을 롯데백화점 전 계정에 일괄 수령 요청 접수.
+  - 관련 HAR 파일(`mapi.lotteshopping.com_11-05-2026-12-03-03.har`) 및 모바일 쇼핑뉴스 게이트 주소를 기반으로 이벤트 아키텍처 역공학 및 자동 발급 파이프라인 수행.
+- **핵심 목표**:
+  1. 쇼핑뉴스 게이트(`SNM00000000000567275`)의 하위 아이프레임 및 쿠폰 식별자 구조 분석.
+  2. 실제 발급 대상 쿠폰 번호(`CPM00000000000140349`), 행사 코드(`CEC0000199839`), 대상 지점(잠실점 `0002`) 도출.
+  3. `lib/lottedpt-coupon.mjs` 내 게이트 파서(`downloadFromGateNews`)의 아이프레임 및 쿠폰 슬러그 자동 역참조 기능 구현.
+  4. 스페셜 쿠폰북 목록에 등록 및 전용 CLI 스크립트(`scripts/download-lottedpt-christmas-fastpass.mjs`) 작성.
+  5. 등록된 롯데백화점 활성 5대 계정(SW, SJ, 셜리, 도도1, 도도2)에 대해 전원 발급 성공 및 내 쿠폰함 보유 검증.
+
+---
+
+## 2. 게이트 및 이벤트 구조 역공학
+
+1. **상세 페이지 인증 제약 확인**:
+   - `shpgnews/shpgnewsDetail`은 비로그인 시 인증 에러 스크립트를 반환하므로 앱 세션 헤더를 동반하여 요청해야 정상 콘텐츠를 수신함.
+2. **아이프레임 중계 및 쿠폰 슬러그 해독**:
+   - 게이트 상세 HTML 내 `html_999999sn/index.html` 아이프레임이 삽입되어 있음.
+   - 아이프레임 내 `linkObj`에서 `type: "coupon"`, `url: "7d86b5873920500e"` 식별자 발견.
+   - `/cpn/cpnDetail?cpnInfoNo=7d86b5873920500e` 조회를 거쳐 최종 쿠폰 번호 `CPM00000000000140349` 및 행사 코드 `CEC0000199839` 매핑 완료.
+3. **쿠폰 사양**:
+   - **쿠폰명**: 크리스마스 마켓 패스트패스
+   - **지점**: 잠실점 (`0002`)
+   - **혜택**: 마켓 기간(2026.11.19 ~ 2027.01.03) 중 사전 예약 없이 동반 1인 포함 패스트패스 라인 상시 입장 가능.
+
+---
+
+## 3. 주요 구현 및 변경 내역
+
+1. **`lib/lottedpt-coupon.mjs` 게이트 파서 고도화**:
+   - `downloadFromGateNews` 함수에서 정적 HTML에 쿠폰이 없을 때 내부 아이프레임을 자동 탐색하도록 개선.
+   - `linkObj`의 쿠폰 슬러그를 역조회하여 실제 `CPM` 쿠폰 번호를 도출하고, 지점명(잠실점)을 감지하여 대상 지점 코드(`0002`)로 전환하여 발급하도록 처리.
+   - `SPECIAL_COUPON_BOOKS`에 `jamsil_christmas_fastpass_2026` 항목 등록.
+2. **`scripts/download-lottedpt-christmas-fastpass.mjs` CLI 스크립트 작성**:
+   - 독립 실행형 Node.js CLI 스크립트 구현.
+   - `process.chdir` 적용 및 동적 모듈 로더를 통해 어느 작업 디렉토리에서 실행하더라도 `data/attendance.sqlite` 데이터베이스에 정확히 연결.
+   - 잠실점 세션 사전 유효성 점검 및 토큰 리프레시 후 쿠폰 일괄 발급 처리.
+3. **기술 가이드 문서 작성**:
+   - `docs/lottedpt-christmas-market-fastpass-guide.md` 신규 작성.
+
+---
+
+## 4. 검증 결과
+
+- 등록된 롯데백화점 활성 5개 계정 전체 발급 성공:
+  - **SW (krazyeom)**: 염성욱 (AVENUEL PURPLE) - `OK, 전송 성공` (0000)
+  - **SJ (mikako13)**: 박수지 (PRE-GREEN) - `OK, 전송 성공` (0000)
+  - **셜리 (10632kuk)**: 김진택 (AVENUEL ORANGE) - `OK, 전송 성공` (0000)
+  - **도도1 (ogounii)**: 이현지 (AVENUEL ORANGE) - `OK, 전송 성공` (0000)
+  - **도도2 (ogouniii)**: 이인희 (AVENUEL ORANGE) - `OK, 전송 성공` (0000)
+- `/mycpn/myCpnListTmplAjax` 내 쿠폰함 검증 호출 결과, 5개 계정 모두 `CPM00000000000140349` 패스트패스 쿠폰이 정상 보관되어 있음을 최종 확인.
