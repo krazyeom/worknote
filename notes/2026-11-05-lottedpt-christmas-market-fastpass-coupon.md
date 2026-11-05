@@ -16,8 +16,8 @@ tags: [lottedpt, coupon, christmas-market, fastpass, jamsil, automation, har-ana
   2. 실제 발급 대상 쿠폰 번호(`CPM00000000000140349`), 행사 코드(`CEC0000199839`), 대상 지점(잠실점 `0002`) 도출.
   3. `lib/lottedpt-coupon.mjs` 내 게이트 파서(`downloadFromGateNews`)의 아이프레임 및 쿠폰 슬러그 자동 역참조 기능 구현.
   4. 스페셜 쿠폰북 목록에 등록 및 전용 CLI 스크립트(`scripts/download-lottedpt-christmas-fastpass.mjs`) 작성.
-  5. 등록된 롯데백화점 활성 9대 계정(SW, SJ, 셜리, 도도1, 도도2, 찌은누나, DY, 지은맘, 봄곰)에 대해 전원 패스트패스 발급 성공 및 내 쿠폰함 보유 검증.
-  6. `도도1`(`ogounii`), `도도2`(`ogouniii`), `찌은누나`(`zerocool-je`), `지은맘`(`lkh7270`), `봄곰`(`whitebearsunny@hanmail.net`) 총 5개 계정에 대해 `skip_daily: 1`을 적용하여 다른 일일/월간 상시 자동 응모 파이프라인에서 원천 격리.
+  5. 등록된 롯데백화점 활성 10대 계정(SW, SJ, 셜리, 도도1, 도도2, 찌은누나, DY, 지은맘, 봄곰, 찌은아빠)에 대해 전원 패스트패스 발급 성공 및 내 쿠폰함 보유 검증.
+  6. `도도1`(`ogounii`), `도도2`(`ogouniii`), `찌은누나`(`zerocool-je`), `지은맘`(`lkh7270`), `봄곰`(`whitebearsunny@hanmail.net`), `찌은아빠`(`pjl1206`) 총 6개 계정에 대해 `skip_daily: 1`을 적용하여 다른 일일/월간 상시 자동 응모 파이프라인에서 원천 격리.
   7. `DY`(`dalkong0109`) 계정 신규 등록 및 크리스마스 패스트패스와 더불어 10/29 F&B 바우처 4종(1만, 2만, 3만, 5만원권, 총 11만원 상당) 일괄 발급 완료.
   8. 관리자 UI(`app/admin/lottedpt-coupon`) 및 API(`toggle_skip_daily`)에 계정별 자동화 격리 뱃지 표출과 실시간 원클릭 격리 토글 기능 구현.
 
@@ -55,7 +55,7 @@ tags: [lottedpt, coupon, christmas-market, fastpass, jamsil, automation, har-ana
 
 ## 4. 검증 결과
 
-- 등록된 롯데백화점 활성 9개 계정 전체 발급 성공:
+- 등록된 롯데백화점 활성 10개 계정 전체 발급 성공:
   - **SW (krazyeom)**: 염성욱 (AVENUEL PURPLE) - `OK, 전송 성공` (0000)
   - **SJ (mikako13)**: 박수지 (PRE-GREEN) - `OK, 전송 성공` (0000)
   - **셜리 (10632kuk)**: 김진택 (AVENUEL ORANGE) - `OK, 전송 성공` (0000)
@@ -65,7 +65,8 @@ tags: [lottedpt, coupon, christmas-market, fastpass, jamsil, automation, har-ana
   - **DY (dalkong0109)**: 염다윤 (Members) - 패스트패스 및 F&B 바우처 4종(1만, 2만, 3만, 5만원) `OK, 전송 성공` (0000)
   - **지은맘 (lkh7270)**: 이광희 (Members) - `OK, 전송 성공` (0000)
   - **봄곰 (whitebearsunny@hanmail.net)**: 이광선 (Members) - `OK, 전송 성공` (0000)
-- `/mycpn/myCpnListTmplAjax` 내 쿠폰함 검증 호출 결과, 9개 계정 모두 `CPM00000000000140349` 패스트패스 쿠폰이 정상 보관되어 있음을 최종 확인.
+  - **찌은아빠 (pjl1206)**: 박종락 (Members) - `OK, 전송 성공` (0000)
+- `/mycpn/myCpnListTmplAjax` 내 쿠폰함 검증 호출 결과, 10개 계정 모두 `CPM00000000000140349` 패스트패스 쿠폰이 정상 보관되어 있음을 최종 확인.
 - `DY` 계정의 경우 10/29 F&B 바우처 4종(`CPM...140286`, `140287`, `140288`, `140289`)이 본점 쿠폰함에 정상 유효하게(11/8까지 사용 가능) 입고됨을 확인.
-- `도도1`, `도도2`, `찌은누나`, `지은맘`, `봄곰` 총 5개 계정은 `skip_daily: 1` 설정으로 매일 새벽 3시 전 지점 쿠폰 자동 스캔 및 오전 10시 쿠폰 탐색 등 기타 상시 자동화 루틴에는 절대 참여하지 않도록 격리 완료.
+- `도도1`, `도도2`, `찌은누나`, `지은맘`, `봄곰`, `찌은아빠` 총 6개 계정은 `skip_daily: 1` 설정으로 매일 새벽 3시 전 지점 쿠폰 자동 스캔 및 오전 10시 쿠폰 탐색 등 기타 상시 자동화 루틴에는 절대 참여하지 않도록 격리 완료.
 - 관리자 UI(`app/admin/lottedpt-coupon`)에서 계정별 `🛡️ 자동화 격리` 상태를 시각화하고 원클릭 토글 버튼(`toggle_skip_daily`)을 제공하여 관리 편의성을 극대화함.

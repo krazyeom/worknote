@@ -15,8 +15,8 @@ tags: [lottedpt, coupon, qr-code, fnb, jamsil, automation, fastpass]
   2. 실제 발급 대상 쿠폰 번호(`CPM00000000000140625`), 행사 코드(`9220101664141`), 대상 지점(잠실점 `0002`) 도출.
   3. `lib/lottedpt-coupon.mjs` 내 스페셜 쿠폰북 등록 및 쿠폰함 조회 지점 파라미터 보강.
   4. 전 계정 일괄 발급 CLI 스크립트(`scripts/download-lottedpt-jamsil-fnb-5000.mjs`) 작성 및 실행.
-  5. 활성 9대 계정(SW, SJ, 셜리, 도도1, 도도2, 찌은누나, DY, 지은맘, 봄곰) 전원에 대해 발급 성공 및 잠실점 쿠폰함 보유 검증.
-  6. 격리 계정(`도도1`, `도도2`, `찌은누나`, `지은맘`, `봄곰`)의 `skip_daily: 1` 설정은 그대로 유지하여 일일 상시 루틴 격리 유지.
+  5. 활성 10대 계정(SW, SJ, 셜리, 도도1, 도도2, 찌은누나, DY, 지은맘, 봄곰, 찌은아빠) 전원에 대해 발급 성공 및 잠실점 쿠폰함 보유 검증.
+  6. 격리 계정(`도도1`, `도도2`, `찌은누나`, `지은맘`, `봄곰`, `찌은아빠`)의 `skip_daily: 1` 설정은 그대로 유지하여 일일 상시 루틴 격리 유지.
 
 ---
 
@@ -50,7 +50,7 @@ tags: [lottedpt, coupon, qr-code, fnb, jamsil, automation, fastpass]
 
 ## 4. 검증 결과
 
-등록된 롯데백화점 활성 9개 계정 전원에 대해 발급 성공 및 내 쿠폰함 보관을 확인했습니다.
+등록된 롯데백화점 활성 10개 계정 전원에 대해 발급 성공 및 내 쿠폰함 보관을 확인했습니다.
 
 | 계정 라벨 | 로그인 ID | 회원명 | 회원 등급 | 발급 결과 | 잠실점 쿠폰함 검증 | 자동화 정책 |
 |---|---|---|---|---|---|---|
@@ -63,3 +63,4 @@ tags: [lottedpt, coupon, qr-code, fnb, jamsil, automation, fastpass]
 | **DY** | dalkong0109 | 염다윤 | Members | 성공 (0000, OK) | 정상 보유 확인 | 상시 대상 |
 | **지은맘** | lkh7270 | 이광희 | Members | 성공 (0000, OK) | 정상 보유 확인 | `skip_daily: 1` (격리 유지) |
 | **봄곰** | whitebearsunny@hanmail.net | 이지선 | Members | 성공 (0000, OK) | 정상 보유 확인 | `skip_daily: 1` (격리 유지) |
+| **찌은아빠** | pjl1206 | 박종락 | Members | 성공 (0000, OK) | 정상 보유 확인 | `skip_daily: 1` (격리 유지) |
