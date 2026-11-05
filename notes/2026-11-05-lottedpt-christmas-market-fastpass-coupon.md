@@ -16,7 +16,8 @@ tags: [lottedpt, coupon, christmas-market, fastpass, jamsil, automation, har-ana
   2. 실제 발급 대상 쿠폰 번호(`CPM00000000000140349`), 행사 코드(`CEC0000199839`), 대상 지점(잠실점 `0002`) 도출.
   3. `lib/lottedpt-coupon.mjs` 내 게이트 파서(`downloadFromGateNews`)의 아이프레임 및 쿠폰 슬러그 자동 역참조 기능 구현.
   4. 스페셜 쿠폰북 목록에 등록 및 전용 CLI 스크립트(`scripts/download-lottedpt-christmas-fastpass.mjs`) 작성.
-  5. 등록된 롯데백화점 활성 5대 계정(SW, SJ, 셜리, 도도1, 도도2)에 대해 전원 발급 성공 및 내 쿠폰함 보유 검증.
+  5. 등록된 롯데백화점 활성 6대 계정(SW, SJ, 셜리, 도도1, 도도2, 찌은누나)에 대해 전원 발급 성공 및 내 쿠폰함 보유 검증.
+  6. 신규 추가 계정(`찌은누나`, `zerocool-je`)에 대해 `skip_daily: 1`을 적용하여 다른 일일 쿠폰 자동 응모에서는 원천 격리.
 
 ---
 
@@ -52,10 +53,12 @@ tags: [lottedpt, coupon, christmas-market, fastpass, jamsil, automation, har-ana
 
 ## 4. 검증 결과
 
-- 등록된 롯데백화점 활성 5개 계정 전체 발급 성공:
+- 등록된 롯데백화점 활성 6개 계정 전체 발급 성공:
   - **SW (krazyeom)**: 염성욱 (AVENUEL PURPLE) - `OK, 전송 성공` (0000)
   - **SJ (mikako13)**: 박수지 (PRE-GREEN) - `OK, 전송 성공` (0000)
   - **셜리 (10632kuk)**: 김진택 (AVENUEL ORANGE) - `OK, 전송 성공` (0000)
   - **도도1 (ogounii)**: 이현지 (AVENUEL ORANGE) - `OK, 전송 성공` (0000)
   - **도도2 (ogouniii)**: 이인희 (AVENUEL ORANGE) - `OK, 전송 성공` (0000)
-- `/mycpn/myCpnListTmplAjax` 내 쿠폰함 검증 호출 결과, 5개 계정 모두 `CPM00000000000140349` 패스트패스 쿠폰이 정상 보관되어 있음을 최종 확인.
+  - **찌은누나 (zerocool-je)**: 박지은 (PRE-GREEN) - `OK, 전송 성공` (0000)
+- `/mycpn/myCpnListTmplAjax` 내 쿠폰함 검증 호출 결과, 6개 계정 모두 `CPM00000000000140349` 패스트패스 쿠폰이 정상 보관되어 있음을 최종 확인.
+- `찌은누나` 계정은 `skip_daily: 1` 설정으로 매일 전 지점 쿠폰 자동 스캔 및 VIP 식사권 탐색 등 기타 루틴에는 절대 참여하지 않도록 격리 완료.
